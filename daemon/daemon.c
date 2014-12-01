@@ -6,8 +6,20 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <pthread.h>
+#include <assert.h>
 
 #include <time.h>
+
+#define MAXTHREADS 10
+
+typedef struct {
+  pthread_rwlock_t	rwlock;
+  unsigned long int	sum;
+  unsigned long 	array[MAXTHREADS];
+  int                   readers;
+  int                   writers;
+} my_array_t;
 
 int main(int argc, char* argv[]) {
     /* Log file */
