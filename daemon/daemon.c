@@ -29,6 +29,11 @@ int main(int argc, char* argv[])
     char message[1000];
     char* limit;
 
+    if (argc != 2) {
+        printf("Usage: %s name\n", argv[0]);
+        exit(1);
+    }
+
     process_id = fork();
 
     if (process_id < 0)
@@ -64,7 +69,7 @@ int main(int argc, char* argv[])
     servaddr.sin_port=htons(32000);
     bind(sockfd,(struct sockaddr *)&servaddr,sizeof(servaddr));
 
-    fp = fopen ("mylog.log", "w+");
+    fp = fopen (argv[1], "w+");
 
     while (1)
     {
