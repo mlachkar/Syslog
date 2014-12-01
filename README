@@ -1,0 +1,8 @@
+make in each directory, then
+
+cd daemon
+./mysyslog
+
+cd stresstester
+export LD_LIBRARY_PATCH="../liblog:$LD_LIBRARY_PATH"
+./tester my_name

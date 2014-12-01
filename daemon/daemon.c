@@ -64,8 +64,8 @@ int main(int argc, char* argv[])
     servaddr.sin_port=htons(32000);
     bind(sockfd,(struct sockaddr *)&servaddr,sizeof(servaddr));
 
-    fp = fopen ("mylog.txt", "w+");
-    
+    fp = fopen ("mylog.log", "w+");
+
     while (1)
     {
         len = sizeof(cliaddr);
