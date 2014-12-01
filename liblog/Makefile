@@ -1,7 +1,7 @@
-TARGET = tester
-LIBS = -llog
+TARGET = liblog.so
+LIBS =
 CC = gcc
-CFLAGS = -g -Wall -pedantic -L../liblog
+CFLAGS = -g -Wall -pedantic -fPIC -shared
 
 .PHONY: default all clean
 
