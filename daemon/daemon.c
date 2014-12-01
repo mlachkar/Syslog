@@ -9,8 +9,7 @@
 
 #include <time.h>
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     /* Log file */
     FILE *fp= NULL;
 
@@ -30,7 +29,7 @@ int main(int argc, char* argv[])
     char* limit;
 
     if (argc != 2) {
-        printf("Usage: %s name\n", argv[0]);
+        printf("Usage: %s log_file\n", argv[0]);
         exit(1);
     }
 

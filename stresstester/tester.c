@@ -1,10 +1,16 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include "../liblog/liblog.h"
 
-int main(void) {
+int main(int argc, char* argv[]) {
 
-    mylog("plop", "A different kind of Hello world ... ");
+    if (argc != 2) {
+        printf("Usage: %s name\n", argv[0]);
+        exit(1);
+    }
+
+    mylog(argv[1], "A different kind of Hello world ... ");
 
     return 0;
 }
