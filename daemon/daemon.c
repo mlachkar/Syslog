@@ -20,6 +20,7 @@ char mesg[MAXTHREADS][1000];
 
 pthread_mutex_t lock;
 sem_t message_waiting;
+sem_t logger_waiting;
 int in = 0;
 int out = 0;
 
@@ -36,14 +37,15 @@ void* thread_routine (void* arg) {
     char* limit;
 
     while (1) {
+
         sem_wait(&message_waiting);
+
+        pthread_mutex_lock(&lock);
 
         limit = index(mesg[out], ':');
         strncpy(name, mesg[out], limit - mesg[out]);
         name[limit - mesg[out]] = 0;
         strcpy(message, limit + 1);
-
-        pthread_mutex_lock(&lock);
 
         now = time (0);
         clock_gettime( CLOCK_REALTIME, &t );
@@ -58,6 +60,8 @@ void* thread_routine (void* arg) {
         out = (out+1)%MAXTHREADS;
 
         pthread_mutex_unlock(&lock);
+
+        sem_post(&logger_waiting);
     }
 }
 
@@ -110,6 +114,7 @@ int main(int argc, char* argv[]) {
 
     pthread_mutex_init(&lock, NULL);
     sem_init(&message_waiting, 0, 0);
+    sem_init(&logger_waiting, 0, MAXTHREADS);
 
     for (i=0; i < MAXTHREADS;i++) {
         assert((pthread_create(&(thread_id[i]),NULL,
@@ -128,12 +133,15 @@ int main(int argc, char* argv[]) {
 
     while (1)
         {
+            sem_wait(&logger_waiting);
+            pthread_mutex_lock(&lock);
             len = sizeof(cliaddr);
             n = recvfrom(sockfd,mesg[in],1000,0,(struct sockaddr *)&cliaddr,&len);
             sendto(sockfd,raw_mesg,n,0,(struct sockaddr *)&cliaddr,sizeof(cliaddr));
             mesg[in][n] = 0;
 
             in = (in+1)%MAXTHREADS;
+            pthread_mutex_unlock(&lock);
             sem_post(&message_waiting);
         }
 
