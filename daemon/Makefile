@@ -1,5 +1,5 @@
 TARGET = mysyslog
-LIBS = 
+LIBS = -lpthread
 CC = gcc
 CFLAGS = -g -Wall -pedantic
 
