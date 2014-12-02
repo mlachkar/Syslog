@@ -4,6 +4,7 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <assert.h>
 
 void mylog(char* name, char* message) {
     int sockfd;
@@ -19,6 +20,6 @@ void mylog(char* name, char* message) {
 
     sprintf(sendline, "%s[%d]:%s", name, getpid(), message);
 
-    sendto(sockfd,sendline,strlen(sendline),0,
-    (struct sockaddr *)&servaddr,sizeof(servaddr));
+    assert(sendto(sockfd,sendline,strlen(sendline),0,
+    (struct sockaddr *)&servaddr,sizeof(servaddr)) > -1);
 }
