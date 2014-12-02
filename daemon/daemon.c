@@ -62,7 +62,7 @@ void* thread_routine (void* arg) {
         assert(fprintf(fp, "%s:%02.3f %s %s\n", time_buff,seconds, name, message) > -1);
         assert(fflush(fp) == 0);
 
-        /* Increment the id of the next line to be treated */
+        /* increment the id of the next line to be treated */
         out = (out+1)%MAXTHREADS;
 
         assert(pthread_mutex_unlock(&lock) == 0);
@@ -139,11 +139,14 @@ int main(int argc, char* argv[]) {
     while (1) {
         assert(sem_wait(&logger_waiting) == 0);
         assert(pthread_mutex_lock(&lock) == 0);
+
+        /* read from socket */
         len = sizeof(cliaddr);
         n = recvfrom(sockfd,mesg[in],1000,0,(struct sockaddr *)&cliaddr,&len);
         assert(sendto(sockfd,raw_mesg,n,0,(struct sockaddr *)&cliaddr,sizeof(cliaddr)) > -1);
         mesg[in][n] = 0;
 
+        /* increment the id of the next line to be inserted */
         in = (in+1)%MAXTHREADS;
         assert(pthread_mutex_unlock(&lock) == 0);
         assert(sem_post(&message_waiting) == 0);
