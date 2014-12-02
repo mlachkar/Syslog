@@ -28,7 +28,6 @@ struct tm* tt;
 float seconds;
 time_t now;
 
-
 void* thread_routine (void* arg) {
 
     char time_buff[100];
@@ -93,8 +92,6 @@ int main(int argc, char* argv[]) {
 
     if (process_id > 0)
     {
-        printf("process_id of child process %d \n", process_id);
-
         exit(0);
     }
 
@@ -111,7 +108,6 @@ int main(int argc, char* argv[]) {
 
     fp = fopen (argv[1], "w+");
 
-
     pthread_mutex_init(&lock, NULL);
     sem_init(&message_waiting, 0, 0);
 
@@ -122,14 +118,6 @@ int main(int argc, char* argv[]) {
         fflush(stdout);
     }
 
-    printf("plop\n");
-
-    // for (i=0; i < MAXTHREADS;i++) {
-    //     printf("Mama waiting for thread %lu to end\n", thread_id[i]);
-    //     fflush(stdout);
-    //     assert((pthread_join(thread_id[i], NULL)) == 0);
-    // }
-
     sockfd=socket(AF_INET,SOCK_DGRAM,0);
 
     bzero(&servaddr,sizeof(servaddr));
@@ -138,26 +126,19 @@ int main(int argc, char* argv[]) {
     servaddr.sin_port=htons(32000);
     bind(sockfd,(struct sockaddr *)&servaddr,sizeof(servaddr));
 
-
-    printf("plop\n");
-
     while (1)
         {
             len = sizeof(cliaddr);
             n = recvfrom(sockfd,mesg[in],1000,0,(struct sockaddr *)&cliaddr,&len);
             sendto(sockfd,raw_mesg,n,0,(struct sockaddr *)&cliaddr,sizeof(cliaddr));
             mesg[in][n] = 0;
-            printf("plop\n");
 
             in = (in+1)%MAXTHREADS;
             sem_post(&message_waiting);
-
         }
-
 
     pthread_mutex_destroy(&lock);
     sem_destroy(&message_waiting);
-
 
     fclose(fp);
     return (0);
