@@ -1,8 +1,12 @@
-make in each directory, then
+Type `make` in each directory, then:
 
 cd daemon
 ./mysyslog log_file
 
+will launch the log daemon, and
+
 cd stresstester
 export LD_LIBRARY_PATCH="../liblog:$LD_LIBRARY_PATH"
-./tester my_name
+./tester my_name timeout
+
+will start a client names "my_name" sending logs each "timeout" microseconds.
