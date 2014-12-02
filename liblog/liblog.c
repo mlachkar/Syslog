@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 void mylog(char* name, char* message) {
     int sockfd;
@@ -16,9 +17,7 @@ void mylog(char* name, char* message) {
     servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
     servaddr.sin_port=htons(32000);
 
-    strcpy (sendline,name);
-    strcat (sendline, ":");
-    strcat (sendline, message);
+    sprintf(sendline, "%s[%d]:%s", name, getpid(), message);
 
     sendto(sockfd,sendline,strlen(sendline),0,
     (struct sockaddr *)&servaddr,sizeof(servaddr));
