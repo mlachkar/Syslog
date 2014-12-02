@@ -4,15 +4,18 @@
 #include "../liblog/liblog.h"
 
 int main(int argc, char* argv[]) {
-	int i;
+	int i, imax;
+	char log_line[100];
+
     if (argc != 3) {
-        printf("Usage: %s name & integer \n", argv[0]);
+        printf("Usage: %s name number\n", argv[0]);
         exit(1);
     }
-    int imax = atoi(argv[2]);
+    imax = atoi(argv[2]);
 	for (i = 0 ; i < imax ; i++)
 	{
-		mylog(argv[1], "A different kind of Hello world ... ");
+		sprintf(log_line, "this is a log line (%d)", i);
+		mylog(argv[1], log_line);
 	}
     return 0;
 }
