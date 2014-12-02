@@ -21,6 +21,10 @@ typedef struct {
   int                   writers;
 } my_array_t;
 
+    struct timespec t;
+    struct tm       *tt;
+    float           seconds;
+
 int main(int argc, char* argv[]) {
     /* Log file */
     FILE *fp= NULL;
@@ -29,7 +33,7 @@ int main(int argc, char* argv[]) {
     pid_t sid = 0;
 
     time_t now;
-
+	
     int sockfd,n;
     struct sockaddr_in servaddr,cliaddr;
     socklen_t len;
@@ -57,7 +61,8 @@ int main(int argc, char* argv[]) {
     if (process_id > 0)
     {
         printf("process_id of child process %d \n", process_id);
-
+		
+		
         exit(0);
     }
 
@@ -95,8 +100,14 @@ int main(int argc, char* argv[]) {
         strcpy(message, limit + 1);
 
         now = time (0);
-        strftime (time_buff, 100, "%Y-%m-%d %H:%M:%S.000", localtime (&now));
-        fprintf(fp, "%s %s %s\n", time_buff, name, message);
+		clock_gettime( CLOCK_REALTIME, &t );
+		tt = gmtime( &(t.tv_sec) );
+		seconds = (float)tt->tm_sec + ((float)t.tv_nsec / 1000000000.0);
+	
+		strftime (time_buff, 100, "%Y-%m-%d %H:%M", localtime (&now));
+		
+		fprintf(fp, "%s:%02.3f %s %s\n", time_buff,seconds, name, message);
+
         fflush(fp);
     }
     fclose(fp);
