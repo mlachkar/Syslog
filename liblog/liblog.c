@@ -23,4 +23,6 @@ void mylog(char* name, char* message) {
     /* send the log line */
     assert(sendto(sockfd,sendline,strlen(sendline),0,
     (struct sockaddr *)&servaddr,sizeof(servaddr)) > -1);
+
+    close(sockfd);
 }
